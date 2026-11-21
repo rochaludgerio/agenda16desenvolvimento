@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Services | Apresentação Enlatados Juarez</title>
+<style>
+:root{--navy:#10243a;--blue:#1769aa;--cyan:#23b8c7;--ink:#1b2b3a;--muted:#627487;--bg:#f3f7fb;--white:#fff;--line:#dce6ef;--green:#16845b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header{position:sticky;top:0;z-index:10;background:rgba(16,36,58,.97);color:white;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;min-height:68px;box-shadow:0 4px 18px #10243a25}
+.brand{font-weight:800;letter-spacing:.04em}.brand span{color:var(--cyan)}nav{display:flex;gap:18px;align-items:center}nav a{color:#dce8f4;text-decoration:none;font-size:.86rem}nav a:hover{color:#6fe3eb}
+.progress{height:3px;background:#ffffff20;position:absolute;bottom:0;left:0;right:0}.progress b{display:block;height:100%;background:var(--cyan);width:0;transition:width .2s}
+main{max-width:1120px;margin:auto;padding:28px 24px 80px}.hero{min-height:570px;border-radius:26px;background:linear-gradient(120deg,#10243a 0%,#143f66 62%,#087d91 100%);color:white;padding:70px 7%;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:35px;overflow:hidden;position:relative}
+.eyebrow{color:#75e5e8;text-transform:uppercase;font-weight:800;letter-spacing:.15em;font-size:.78rem}.hero h1{font-size:clamp(2.6rem,6vw,5rem);line-height:1.02;margin:18px 0}.hero p{font-size:1.13rem;color:#d5e4f1;max-width:580px}.hero .meta{font-size:.9rem;color:#b6cbdc;margin-top:28px}
+.hero-art{min-height:300px;display:grid;place-items:center}.network{width:min(100%,390px);aspect-ratio:1;border:1px solid #ffffff35;border-radius:50%;position:relative;background:radial-gradient(circle,#1e7490 0%,#174a6a 48%,transparent 70%)}
+.node{position:absolute;background:#fff;color:var(--navy);border-radius:16px;padding:15px 18px;font-weight:800;box-shadow:0 12px 35px #061a2a55;text-align:center}.node small{display:block;font-weight:500;color:#627487}.n1{top:10%;left:28%}.n2{top:43%;right:-3%}.n3{bottom:8%;left:24%}.n4{top:43%;left:-5%}.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:95px;height:95px;border-radius:50%;display:grid;place-items:center;background:var(--cyan);color:#07354a;font-weight:900;border:7px solid #ffffff40}
+section{padding:76px 0 18px;scroll-margin-top:78px}.section-head{margin-bottom:28px}.kicker{color:var(--blue);font-size:.76rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase}.section-head h2{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.12;margin:8px 0 10px;color:var(--navy)}.section-head p{color:var(--muted);max-width:760px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 8px 26px #193b5510}.card h3{margin:8px 0;color:var(--navy)}.card p{margin:0;color:var(--muted)}.icon{font-size:1.7rem}.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:24px 0}.step{flex:1;min-width:145px;background:white;border:1px solid var(--line);border-radius:15px;padding:18px;text-align:center}.step strong{display:block;color:var(--blue);font-size:1.05rem}.arrow{align-self:center;color:var(--cyan);font-size:1.5rem;font-weight:900}
+.pill{display:inline-block;background:#e6f6f8;color:#087888;border-radius:30px;padding:4px 11px;font-size:.76rem;font-weight:800;margin:3px}
+pre{background:#0e1b2a;color:#d9edf7;padding:22px;border-radius:14px;overflow:auto;font-size:.86rem;line-height:1.55;border:1px solid #24394d}code{font-family:Consolas,Monaco,monospace}.note{border-left:4px solid var(--cyan);background:#eaf7f8;padding:16px 18px;border-radius:0 12px 12px 0;color:#28515c;margin:18px 0}
+.demo{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 12px 35px #193b5510}.demo label{display:block;font-weight:700;margin:12px 0 5px}.demo input{width:100%;padding:13px;border:1px solid #cbd8e4;border-radius:10px;font-size:1rem}.demo button,.primary{border:0;background:var(--blue);color:white;padding:13px 20px;border-radius:10px;font-weight:800;cursor:pointer;margin-top:14px}.demo button:hover,.primary:hover{background:#0d4f85}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.status{margin-top:14px;font-weight:700}.status.ok{color:var(--green)}.status.err{color:#b33b3b}
+.result{margin-top:20px;padding:18px;border-radius:12px;background:#f1f6fa;display:none}.result strong{color:var(--navy)}.result p{margin:5px 0}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}th,td{text-align:left;padding:14px;border-bottom:1px solid var(--line)}th{background:#eaf1f7;color:var(--navy)}td{color:#526679}
+footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;text-align:center}footer strong{color:white}
+.controls{display:flex;justify-content:space-between;gap:12px;margin-top:28px}.controls button{border:1px solid var(--line);background:white;color:var(--navy);padding:10px 16px;border-radius:9px;cursor:pointer;font-weight:700}
+@media(max-width:800px){nav{display:none}.hero{grid-template-columns:1fr;padding:48px 8%}.hero-art{min-height:260px}.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.arrow{display:none}main{padding:18px 15px 55px}section{padding-top:58px}}
+@media print{header,.controls,.demo button{display:none}.hero{min-height:400px;break-after:page}section{break-inside:avoid}body{background:white}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand">JUAREZ<span> / TECH</span></div>
+ <nav><a href="#inicio">Início</a><a href="#conceito">Conceito</a><a href="#tecnologias">Tecnologias</a><a href="#fluxo">Funcionamento</a><a href="#pratica">Prática</a><a href="#empresa">Empresa</a></nav>
+ <div class="progress"><b id="progress"></b></div>
+</header>
+<main>
+<section class="hero" id="inicio">
+ <div>
+  <div class="eyebrow">Apresentação técnica • Integração de aplicações</div>
+  <h1>Web<br>Services<span style="color:#65e1e6">.</span></h1>
+  <p>Como conectar sistemas, compartilhar informações e construir aplicações integradas — da teoria a uma demonstração prática com consulta de CEP.</p>
+  <div class="meta">Apresentação à equipe de Tecnologia da Informação<br><strong>Enlatados Juarez</strong> · Projeto de estudo</div>
+ </div>
+ <div class="hero-art"><div class="network">
+  <div class="node n1">E-commerce<small>Pedidos</small></div><div class="node n2">Estoque<small>Produtos</small></div><div class="node n3">Financeiro<small>Pagamentos</small></div><div class="node n4">Logística<small>Entregas</small></div><div class="hub">API</div>
+ </div></div>
+</section>
+
+<section id="conceito">
+ <div class="section-head"><div class="kicker">01 • Fundamentos</div><h2>O que são Web Services?</h2><p>Web Service é uma interface desenvolvida para permitir a comunicação entre aplicações por meio de uma rede. O HTTP é um dos protocolos mais utilizados nessa comunicação.</p></div>
+ <div class="grid">
+  <article class="card"><div class="icon">🔗</div><h3>Integração</h3><p>Permite que sistemas diferentes troquem informações sem precisarem ser construídos na mesma linguagem ou plataforma.</p></article>
+  <article class="card"><div class="icon">🌐</div><h3>Comunicação em rede</h3><p>Uma aplicação envia uma requisição a um serviço e recebe uma resposta com os dados solicitados.</p></article>
+  <article class="card"><div class="icon">♻️</div><h3>Reutilização</h3><p>Um serviço pode oferecer funcionalidades para várias aplicações, evitando a reescrita de códigos e regras.</p></article>
+ </div>
+ <div class="note"><strong>Ideia central:</strong> em vez de cada sistema manter isoladamente todas as informações, os serviços permitem compartilhar dados e funcionalidades de maneira organizada.</div>
+</section>
+
+<section id="tecnologias">
+ <div class="section-head"><div class="kicker">02 • Padrões e formatos</div><h2>Tecnologias envolvidas</h2><p>A apostila apresenta três abordagens para Web Services: SOAP, REST e XML-RPC. Também destaca o HTTP e o XML no contexto de XML Web Services.</p></div>
+ <div class="grid">
+  <article class="card"><span class="pill">SOAP</span><h3>Simple Object Access Protocol</h3><p>Protocolo de troca de mensagens estruturadas em XML, utilizado para permitir a comunicação entre aplicações por meio de protocolos como HTTP.</p></article>
+  <article class="card"><span class="pill">REST</span><h3>Representational State Transfer</h3><p>Estilo de arquitetura baseado no HTTP. Não impõe um formato único para a mensagem; orienta o comportamento dos componentes envolvidos.</p></article>
+  <article class="card"><span class="pill">XML-RPC</span><h3>Chamada remota de procedimento</h3><p>Especificação que permite executar operações entre softwares e transmitir estruturas de dados, mantendo a proposta de simplicidade.</p></article>
+ </div>
+ <div class="two" style="margin-top:20px">
+  <article class="card"><h3>HTTP</h3><p>Protocolo de comunicação utilizado para enviar requisições e receber respostas entre cliente e serviço.</p></article>
+  <article class="card"><h3>XML</h3><p>Formato de marcação que organiza dados em elementos e permite representar informações estruturadas.</p></article>
+ </div>
+ <div class="note">A apostila também aponta dois alicerces do XML Web Service: comunicação pelo protocolo HTTP e envio/recebimento de dados no formato XML.</div>
+</section>
+
+<section id="fluxo">
+ <div class="section-head"><div class="kicker">03 • Funcionamento</div><h2>Como acontece a comunicação?</h2><p>Uma aplicação cliente solicita uma informação. O Web Service processa a solicitação e devolve uma resposta que poderá ser utilizada pela aplicação.</p></div>
+ <div class="flow">
+  <div class="step"><strong>1. Cliente</strong><span>Usuário solicita uma ação</span></div><div class="arrow">→</div>
+  <div class="step"><strong>2. Requisição</strong><span>Aplicação envia os dados via rede</span></div><div class="arrow">→</div>
+  <div class="step"><strong>3. Serviço</strong><span>Processa a solicitação</span></div><div class="arrow">→</div>
+  <div class="step"><strong>4. Resposta</strong><span>Retorna os dados</span></div><div class="arrow">→</div>
+  <div class="step"><strong>5. Aplicação</strong><span>Trata e apresenta o resultado</span></div>
+ </div>
+ <div class="two">
+  <article class="card"><h3>Cliente e provedor</h3><p>O cliente inicia a solicitação; o provedor disponibiliza o serviço e responde ao pedido.</p></article>
+  <article class="card"><h3>Comunicação entre serviços</h3><p>Como ilustra o diagrama da página 3 da apostila, um serviço pode atuar como cliente em uma interação e como servidor em outra. A comunicação pode ocorrer entre serviços, não apenas no modelo tradicional cliente-servidor.</p></article>
+ </div>
+</section>
+
+<section id="pratica">
+ <div class="section-head"><div class="kicker">04 • Demonstração prática</div><h2>Consumindo um Web Service: consulta de CEP</h2><p>O material didático utiliza o ViaCEP para buscar um endereço a partir do CEP. A resposta pode fornecer logradouro, complemento, bairro, cidade e estado.</p></div>
+ <div class="two">
+  <div class="demo">
+   <h3>Teste a consulta de endereço</h3>
+   <p style="color:#627487;margin-top:-5px">Digite um CEP brasileiro para consultar o serviço ViaCEP.</p>
+   <label for="cep">CEP</label><input id="cep" inputmode="numeric" maxlength="9" placeholder="Ex.: 01001-000">
+   <button id="buscar">Consultar endereço</button>
+   <div class="status" id="status" aria-live="polite"></div>
+   <div class="result" id="result">
+    <p><strong>Logradouro:</strong> <span id="rua"></span></p><p><strong>Complemento:</strong> <span id="compl"></span></p><p><strong>Bairro:</strong> <span id="bairro"></span></p><p><strong>Cidade:</strong> <span id="cidade"></span></p><p><strong>Estado:</strong> <span id="uf"></span></p>
+   </div>
+  </div>
+  <article class="card">
+   <h3>O que acontece por trás da tela?</h3>
+   <ol>
+    <li>O usuário informa o CEP.</li><li>A aplicação organiza o valor e monta a URL do serviço.</li><li>Uma requisição é enviada ao ViaCEP.</li><li>O serviço retorna os dados do endereço.</li><li>A aplicação interpreta a resposta e exibe os campos.</li>
+   </ol>
+   <div class="note">Esta demonstração usa a resposta JSON do endpoint público do ViaCEP diretamente no navegador. A apostila ensina a mesma ideia de consumo usando PHP e resposta XML.</div>
+  </article>
+ </div>
+ <h3 style="margin-top:32px">Exemplo da apostila: requisição em PHP com XML</h3>
+ <p style="color:#627487">A função abaixo remove caracteres que não sejam números, monta a URL do ViaCEP no formato XML, faz a requisição e retorna o conteúdo recebido.</p>
+ <pre><code>function get_endereco($cep)
+{
+    // Mantém apenas os números do CEP
+    $cep = preg_replace("/[^0-9]/", "", $cep);
+
+    // Monta a URL do Web Service
+    $url = "http://viacep.com.br/ws/$cep/xml/";
+
+    // Faz a requisição e recebe o XML
+    $xml = simplexml_load_file($url);
+
+    return $xml;
+}</code></pre>
+ <h3>Exemplo de resposta XML</h3>
+ <pre><code>&lt;xmlcep&gt;
+  &lt;cep&gt;01001-000&lt;/cep&gt;
+  &lt;logradouro&gt;Praça da Sé&lt;/logradouro&gt;
+  &lt;complemento&gt;lado ímpar&lt;/complemento&gt;
+  &lt; bairro&gt;Sé&lt;/bairro&gt;
+  &lt;localidade&gt;São Paulo&lt;/localidade&gt;
+  &lt;uf&gt;SP&lt;/uf&gt;
+&lt;/xmlcep&gt;</code></pre>
+ <div class="note"><strong>Consolidação dos dados:</strong> após receber o XML, o PHP acessa os elementos desejados (como <code>$endereco-&gt;logradouro</code> e <code>$endereco-&gt;uf</code>) e os utiliza para preencher os campos do cadastro.</div>
+</section>
+
+<section id="cadastro">
+ <div class="section-head"><div class="kicker">05 • Aplicação no sistema</div><h2>Do serviço ao cadastro</h2><p>Na atividade da apostila, o formulário de cadastro do cliente recebe o CEP e, após a consulta, preenche automaticamente os campos de endereço. O material sugere utilizar POST e Session para armazenar os dados retornados.</p></div>
+ <div class="flow">
+  <div class="step"><strong>Formulário</strong><span>Nome e CEP informados</span></div><div class="arrow">→</div>
+  <div class="step"><strong>Botão buscar</strong><span>Dispara a consulta</span></div><div class="arrow">→</div>
+  <div class="step"><strong>ViaCEP</strong><span>Retorna os dados</span></div><div class="arrow">→</div>
+  <div class="step"><strong>Session</strong><span>Armazena os valores</span></div><div class="arrow">→</div>
+  <div class="step"><strong>Cadastro</strong><span>Campos preenchidos</span></div>
+ </div>
+ <table><thead><tr><th>Campo do cadastro</th><th>Informação recebida</th><th>Origem</th></tr></thead><tbody>
+ <tr><td>Logradouro</td><td>Rua, avenida ou praça</td><td>Web Service</td></tr><tr><td>Bairro</td><td>Bairro do endereço</td><td>Web Service</td></tr><tr><td>Cidade</td><td>Localidade</td><td>Web Service</td></tr><tr><td>Estado</td><td>UF</td><td>Web Service</td></tr><tr><td>Número</td><td>Número do imóvel</td><td>Informado pelo usuário</td></tr>
+ </tbody></table>
+ <p style="color:#627487;font-size:.9rem">Referência: Agenda 16, páginas 8 a 14. A apostila apresenta o formulário de cadastro e explica o uso de variáveis de sessão para manter os dados no preenchimento.</p>
+</section>
+
+<section id="empresa">
+ <div class="section-head"><div class="kicker">06 • Cenário empresarial</div><h2>Como isso pode ajudar a Enlatados Juarez?</h2><p>Em uma empresa com diferentes áreas e aplicações, a integração por serviços pode reduzir lançamentos repetidos e manter informações disponíveis aos sistemas que precisam delas.</p></div>
+ <div class="grid">
+  <article class="card"><div class="icon">🛒</div><h3>E-commerce e estoque</h3><p>O sistema de vendas consulta a disponibilidade de produtos antes de confirmar um pedido.</p></article>
+  <article class="card"><div class="icon">💳</div><h3>Vendas e financeiro</h3><p>Uma aplicação pode encaminhar informações de pedidos para apoiar processos de cobrança e conciliação.</p></article>
+  <article class="card"><div class="icon">🚚</div><h3>Logística</h3><p>Dados de endereço e entrega podem ser compartilhados entre o cadastro, o pedido e o sistema logístico.</p></article>
+ </div>
+ <div class="note"><strong>Exemplo hipotético:</strong> quando uma venda é realizada no e-commerce, um serviço poderia disponibilizar os dados do pedido ao estoque e à logística. A implementação dependeria das regras, sistemas e requisitos de segurança da empresa.</div>
+</section>
+
+<section id="competencias">
+ <div class="section-head"><div class="kicker">07 • Aprendizagem</div><h2>Competências demonstradas</h2><p>A atividade trabalha a integração de aplicações para internet por meio da codificação de serviços e da consolidação de dados.</p></div>
+ <div class="two">
+  <article class="card"><span class="pill">Competência 3</span><h3>Desenvolver serviços para integração de aplicações</h3><p>Compreender como sistemas diferentes podem se comunicar e compartilhar informações por meio de Web Services.</p></article>
+  <article class="card"><span class="pill">Habilidade 3.1</span><h3>Codificar serviços</h3><p>Construir a lógica de requisição ao serviço, montar a URL, tratar a resposta e utilizar os dados retornados.</p></article>
+  <article class="card"><span class="pill">Habilidade 3.2</span><h3>Consolidar dados</h3><p>Organizar os dados recebidos e incorporá-los ao formulário ou à aplicação, como no preenchimento dos campos de endereço.</p></article>
+  <article class="card"><span class="pill">Resultado</span><h3>Aplicação integrada</h3><p>Demonstrar, na prática, o consumo de um serviço externo e o aproveitamento das informações na aplicação.</p></article>
+ </div>
+</section>
+
+<section id="conclusao">
+ <div class="section-head"><div class="kicker">08 • Encerramento</div><h2>Conclusão</h2><p>Web Services são uma solução importante para integrar aplicações, compartilhar dados e reaproveitar funcionalidades. Com HTTP, formatos como XML e abordagens como SOAP, REST e XML-RPC, sistemas distintos podem trocar informações de forma estruturada.</p></div>
+ <div class="card" style="background:linear-gradient(120deg,#10243a,#14577a);color:white;border:0;padding:32px">
+  <h2 style="color:white;margin-top:0">Obrigado!</h2>
+  <p style="color:#d5e4f1;font-size:1.08rem">A demonstração com o ViaCEP mostrou o ciclo de uma integração: solicitar, receber, interpretar e utilizar dados em uma aplicação.</p>
+  <p style="color:#75e5e8;font-weight:800;margin-bottom:0">Enlatados Juarez · Tecnologia conectando negócios.</p>
+ </div>
+</section>
+<div class="controls"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Voltar ao início</button><button onclick="window.print()">Imprimir / salvar em PDF</button></div>
+</main>
+<footer><strong>JUAREZ / TECH</strong><br>Apresentação acadêmica sobre Web Services<br><small>Conteúdo baseado na Agenda 16 – Web Services Gratuitos.</small></footer>
+<script>
+const bar=document.getElementById('progress');
+window.addEventListener('scroll',()=>{let h=document.documentElement;bar.style.width=((h.scrollTop/(h.scrollHeight-h.clientHeight))*100)+'%'});
+const cepInput=document.getElementById('cep');
+cepInput.addEventListener('input',()=>{let n=cepInput.value.replace(/\D/g,'').slice(0,8);cepInput.value=n.length>5?n.slice(0,5)+'-'+n.slice(5):n});
+document.getElementById('buscar').addEventListener('click',async()=>{
+ const cep=cepInput.value.replace(/\D/g,'');const status=document.getElementById('status');const result=document.getElementById('result');
+ result.style.display='none';
+ if(cep.length!==8){status.className='status err';status.textContent='Informe um CEP válido com 8 números.';return}
+ status.className='status';status.textContent='Consultando o ViaCEP...';
+ try{
+  const response=await fetch('https://viacep.com.br/ws/'+cep+'/json/');
+  if(!response.ok)throw new Error('Falha na comunicação com o serviço.');
+  const data=await response.json();
+  if(data.erro)throw new Error('CEP não encontrado. Confira os números e tente novamente.');
+  document.getElementById('rua').textContent=data.logradouro||'Não informado';
+  document.getElementById('compl').textContent=data.complemento||'Não informado';
+  document.getElementById('bairro').textContent=data.bairro||'Não informado';
+  document.getElementById('cidade').textContent=data.localidade||'Não informado';
+  document.getElementById('uf').textContent=data.uf||'Não informado';
+  result.style.display='block';status.className='status ok';status.textContent='Consulta realizada com sucesso!';
+ }catch(e){status.className='status err';status.textContent=e.message||'Não foi possível consultar. Verifique sua conexão e tente novamente.'}
+});
+</script>
+</body>
+</html>
