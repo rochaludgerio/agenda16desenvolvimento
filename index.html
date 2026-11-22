@@ -39,7 +39,7 @@ footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;tex
   <div class="eyebrow">Apresentação técnica • Integração de aplicações</div>
   <h1>Web<br>Services<span style="color:#65e1e6">.</span></h1>
   <p>Como conectar sistemas, compartilhar informações e construir aplicações integradas — da teoria a uma demonstração prática com consulta de CEP.</p>
-  <div class="meta">Apresentação à equipe de Tecnologia da Informação<br><strong>Enlatados Juarez</strong> · Projeto de estudo</div>
+  <div class="meta">Apresentação à equipe de Tecnologia da Informação<br><strong>Enlatados Juarez</strong> · Projeto de estudo<br>Apresentado por <strong>Ludgerio Rocha de Matos</strong> · Web III · Agenda 16</div>
  </div>
  <div class="hero-art"><div class="network">
   <div class="node n1">E-commerce<small>Pedidos</small></div><div class="node n2">Estoque<small>Produtos</small></div><div class="node n3">Financeiro<small>Pagamentos</small></div><div class="node n4">Logística<small>Entregas</small></div><div class="hub">API</div>
@@ -127,7 +127,7 @@ footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;tex
     $cep = preg_replace("/[^0-9]/", "", $cep);
 
     // Monta a URL do Web Service
-    $url = "http://viacep.com.br/ws/$cep/xml/";
+    $url = "https://viacep.com.br/ws/$cep/xml/";
 
     // Faz a requisição e recebe o XML
     $xml = simplexml_load_file($url);
@@ -139,10 +139,20 @@ footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;tex
   &lt;cep&gt;01001-000&lt;/cep&gt;
   &lt;logradouro&gt;Praça da Sé&lt;/logradouro&gt;
   &lt;complemento&gt;lado ímpar&lt;/complemento&gt;
-  &lt; bairro&gt;Sé&lt;/bairro&gt;
+  &lt;bairro&gt;Sé&lt;/bairro&gt;
   &lt;localidade&gt;São Paulo&lt;/localidade&gt;
   &lt;uf&gt;SP&lt;/uf&gt;
 &lt;/xmlcep&gt;</code></pre>
+ <div class="note"><strong>Observações técnicas:</strong> a apostila usa <code>http://</code>, mas o ViaCEP atende em <code>https://</code>, que é o recomendado. Para o <code>simplexml_load_file()</code> aceitar uma URL, o PHP do servidor precisa estar com <code>allow_url_fopen</code> ativo (no XAMPP/Apache já vem habilitado).</div>
+ <h3>Tratando CEP inexistente</h3>
+ <p style="color:#627487">Se o CEP não existir, o serviço devolve um erro e o código da apostila não percebe. Um teste simples evita mostrar campos vazios ao usuário:</p>
+ <pre><code>$endereco = @get_endereco($_POST["txtCEP"]);
+
+if ($endereco === false || isset($endereco-&gt;erro)) {
+    echo "CEP não encontrado. Confira os números digitados.";
+} else {
+    echo "Rua: $endereco-&gt;logradouro";
+}</code></pre>
  <div class="note"><strong>Consolidação dos dados:</strong> após receber o XML, o PHP acessa os elementos desejados (como <code>$endereco-&gt;logradouro</code> e <code>$endereco-&gt;uf</code>) e os utiliza para preencher os campos do cadastro.</div>
 </section>
 
@@ -158,6 +168,41 @@ footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;tex
  <table><thead><tr><th>Campo do cadastro</th><th>Informação recebida</th><th>Origem</th></tr></thead><tbody>
  <tr><td>Logradouro</td><td>Rua, avenida ou praça</td><td>Web Service</td></tr><tr><td>Bairro</td><td>Bairro do endereço</td><td>Web Service</td></tr><tr><td>Cidade</td><td>Localidade</td><td>Web Service</td></tr><tr><td>Estado</td><td>UF</td><td>Web Service</td></tr><tr><td>Número</td><td>Número do imóvel</td><td>Informado pelo usuário</td></tr>
  </tbody></table>
+  <h3 style="margin-top:32px">Código do cadastro com Session (solução da apostila)</h3>
+ <p style="color:#627487">Este é o núcleo do arquivo <code>VoceNoComando.php</code>. O formulário usa <code>method="post"</code> e <code>action="#"</code>, ou seja, envia os dados para a própria página.</p>
+ <pre><code>&lt;?php
+function get_endereco($cep) { /* consulta o ViaCEP (mostrada acima) */ }
+
+if (!isset($_SESSION)) { session_start(); }
+
+// 1) Inicializa as variáveis de sessão vazias
+$_SESSION["nome"] = "";   $_SESSION["cep"] = "";
+$_SESSION["logradouro"] = "";  $_SESSION["numero"] = "";
+$_SESSION["bairro"] = ""; $_SESSION["cidade"] = ""; $_SESSION["estado"] = "";
+
+// 2) Se o botão "Buscar Endereço" foi clicado, consulta o Web Service
+if (isset($_POST["btnBuscar"])) {
+    $endereco = get_endereco($_POST["txtCEP"]);
+
+    // Dados digitados pelo usuário
+    $_SESSION["nome"]   = $_POST["txtNome"];
+    $_SESSION["cep"]    = $_POST["txtCEP"];
+    $_SESSION["numero"] = $_POST["txtNumero"];
+
+    // Dados vindos do Web Service (convertidos para texto)
+    $_SESSION["logradouro"] = (string)$endereco-&gt;logradouro;
+    $_SESSION["bairro"]     = (string)$endereco-&gt;bairro;
+    $_SESSION["cidade"]     = (string)$endereco-&gt;localidade;
+    $_SESSION["estado"]     = (string)$endereco-&gt;uf;
+}
+?&gt;
+
+&lt;!-- 3) Cada campo exibe a variável de sessão correspondente --&gt;
+&lt;input name="txtLogradouro" value="&lt;?php echo $_SESSION["logradouro"]; ?&gt;"&gt;</code></pre>
+ <div class="two">
+  <article class="card"><h3>Por que <code>(string)</code>?</h3><p>O <code>simplexml</code> devolve objetos XML. Converter para texto garante que a Session guarde apenas o valor, pronto para ir ao campo do formulário.</p></article>
+  <article class="card"><h3>O que é consolidar dados?</h3><p>Reunir no mesmo lugar o que o usuário digitou (nome, número) e o que o serviço retornou (rua, bairro, cidade, UF), formando um cadastro completo.</p></article>
+ </div>
  <p style="color:#627487;font-size:.9rem">Referência: Agenda 16, páginas 8 a 14. A apostila apresenta o formulário de cadastro e explica o uso de variáveis de sessão para manter os dados no preenchimento.</p>
 </section>
 
@@ -191,7 +236,7 @@ footer{margin-top:70px;padding:35px 5vw;background:var(--navy);color:#d7e4ee;tex
 </section>
 <div class="controls"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Voltar ao início</button><button onclick="window.print()">Imprimir / salvar em PDF</button></div>
 </main>
-<footer><strong>JUAREZ / TECH</strong><br>Apresentação acadêmica sobre Web Services<br><small>Conteúdo baseado na Agenda 16 – Web Services Gratuitos.</small></footer>
+<footer><strong>JUAREZ / TECH</strong><br>Apresentação acadêmica sobre Web Services<br><small>Autor: Ludgerio Rocha de Matos · Conteúdo baseado na Agenda 16 – Web Services Gratuitos.</small></footer>
 <script>
 const bar=document.getElementById('progress');
 window.addEventListener('scroll',()=>{let h=document.documentElement;bar.style.width=((h.scrollTop/(h.scrollHeight-h.clientHeight))*100)+'%'});
